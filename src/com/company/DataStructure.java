@@ -3,6 +3,8 @@ package com.company;
 import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.Scanner;
+import java.util.Stack;
 
 public class DataStructure {
 
@@ -58,29 +60,29 @@ public class DataStructure {
         }
 
         //histogram
-        int[] emptyArrForCharacterCount = new int[12];
+        int[] arrForCountedWords = new int[12];
 
-        for (int j = 0; j < emptyArrForCharacterCount.length; j++) {
+        for (int j = 0; j < arrForCountedWords.length; j++) {
             int charCounter2 = 0;
             for (String word : randomNames) {
                 if (j == word.length()) {
                     charCounter2++;
                 }
             }
-            emptyArrForCharacterCount[j] = charCounter2;
+            arrForCountedWords[j] = charCounter2;
             if (charCounter2 != 0) {
-                System.out.println("There are " + emptyArrForCharacterCount[j] + " words with " + j + " characters.");
+                System.out.println("There are " + arrForCountedWords[j] + " words with " + j + " characters.");
             }
         }
 
         //sorting alphabetically
         String temp;
 
-        for (int times = 0; times < randomNames.size(); times++) {
-            for (int i = 0; i < randomNames.size() - 1; i++) {
-                if (randomNames.get(i).compareToIgnoreCase(randomNames.get(i + 1)) > 0) {
+        for (int times = 0; times < randomNames.size(); times++) { //times necessary to go through the list
+            for (int i = 0; i < randomNames.size() - 1 - times; i++) { //going through the list minus last element minus last looptime (or the number of elements already sorted)
+                if (randomNames.get(i).compareToIgnoreCase(randomNames.get(i + 1)) > 0) { //compare>0 if the first is larger; compare<0 if second is larger; compare=0 if equal
                     temp = randomNames.get(i);
-                    randomNames.set(i, randomNames.get(i + 1));
+                    randomNames.set(i, randomNames.get(i + 1)); //changing i-th element to i+1 element
                     randomNames.set(i + 1, temp);
                 }
             }
@@ -88,6 +90,7 @@ public class DataStructure {
         for (String word : randomNames) {
             System.out.println(word);
         }
+        System.out.println();
     }
 
     //Start of Assignment 2
@@ -143,7 +146,29 @@ public class DataStructure {
                 System.out.println("This sentence is not a palindrome");
             }
         }
+
+        System.out.print("Enter any string:");
+        Scanner in = new Scanner(System.in);
+        String inputString = in.nextLine();
+        Stack stack = new Stack();
+
+        for (int i = 0; i < inputString.length(); i++) {
+            stack.push(inputString.charAt(i));
+        }
+
+        String reverseString = "";
+
+        while (!stack.isEmpty()) {
+            reverseString = reverseString + stack.pop();
+        }
+
+        if (inputString.equals(reverseString))
+            System.out.println("The input String is a palindrome.");
+        else
+            System.out.println("The input String is not a palindrome.");
+
     }
+
 
     static void Assignment3() {
         HashMap<String, Integer> productList = new HashMap<String, Integer>();
@@ -170,23 +195,19 @@ public class DataStructure {
         //which one is the cheapest product
         int cheapestPrice = Integer.MAX_VALUE;
         String cheapestProduct = "unknown";
-        for (Map.Entry<String, Integer> entry : productList.entrySet())
-        {
-            if(entry.getValue() < cheapestPrice)
-            {
+        for (Map.Entry<String, Integer> entry : productList.entrySet()) {
+            if (entry.getValue() < cheapestPrice) {
                 cheapestPrice = entry.getValue();
                 cheapestProduct = entry.getKey();
-                }
+            }
         }
         System.out.println("The cheapest product is " + cheapestProduct + " and it costs " + productList.get(cheapestProduct) + " euros.");
 
         //which one is the most expensive product
         int dearestPrice = Integer.MIN_VALUE;
         String dearestProduct = "unknown";
-        for(Map.Entry<String, Integer> entry1 : productList.entrySet())
-        {
-            if(entry1.getValue() > dearestPrice)
-            {
+        for (Map.Entry<String, Integer> entry1 : productList.entrySet()) {
+            if (entry1.getValue() > dearestPrice) {
                 dearestPrice = entry1.getValue();
                 dearestProduct = entry1.getKey();
             }
@@ -234,22 +255,82 @@ public class DataStructure {
         //which one is the cheapest product
         int cheapestPrice1 = Integer.MAX_VALUE;
         String cheapestProduct1 = "unknown";
-        for (Map.Entry<String, Integer> entry1 : listOfProducts.entrySet())
-        {
-            if(entry1.getValue() < cheapestPrice1)
-            {
+        for (Map.Entry<String, Integer> entry1 : listOfProducts.entrySet()) {
+            if (entry1.getValue() < cheapestPrice1) {
                 cheapestPrice1 = entry1.getValue();
                 cheapestProduct1 = entry1.getKey();
-                }
+            }
         }
         System.out.println("The cheapest product is " + cheapestProduct1 + " and it costs " + listOfProducts.get(cheapestProduct1) + " euros.");
     }
     //Since it seems that everything in HashTable works the same as in HashMap, I stopped doing copy+paste. I checked on the net that merge is also with .putAll
-    //so I saved some time in not repeating actions, but will spend some time trying to do sorting the values in ascending order.
 
     public static void main(String[] args) {
-        Assignment1();
-        Assignment2();
-        Assignment3();
+//        Assignment1();
+//        Assignment2();
+//        Assignment3();
+
+    }
+
+    public static class PalindromeCheckUsingStack { // for this and the next palindrome check I worked with: https://beginnersbook.com/2014/01/java-program-to-check-palindrome-string/
+
+        public static void main(String[] args) {
+
+            System.out.println("Enter any sentence you wish to check for a palindrome: ");
+            Scanner input = new Scanner(System.in);
+            String inputString = input.nextLine();
+
+            inputString = inputString.toLowerCase();
+            String inputStringToLetters = inputString.replaceAll("[^a-z]", "");
+
+            Stack stack = new Stack();
+
+            for (int i = 0; i < inputString.length(); i++) {
+                stack.push(inputString.charAt(i));
+            }
+
+            String reverseInputStringLetters = "";
+
+            while (!stack.isEmpty()) {
+                reverseInputStringLetters = reverseInputStringLetters + stack.pop();
+            }
+
+            if (inputStringToLetters.equals(reverseInputStringLetters))
+                System.out.println("This sentence is a palindrome.");
+            else
+                System.out.println("This sentence is not a palindrome.");
+        }
+
+    }
+
+    public static class PalindromeUsingQueue {
+        public static void main(String[] args) {
+            System.out.print("Enter any sentence you wish to check for a palindrome: ");
+            Scanner in = new Scanner(System.in);
+            String inputSentence = in.nextLine();
+            inputSentence = inputSentence.toLowerCase();
+
+            Queue queue = new LinkedList();
+
+            for (int i = inputSentence.length() - 1; i >= 0; i--) {
+                queue.add(inputSentence.charAt(i));
+            }
+
+            String reverseSentence = "";
+
+            while (!queue.isEmpty()) {
+                reverseSentence = reverseSentence + queue.remove();
+            }
+            if (inputSentence.equals(reverseSentence))
+                System.out.println("The input sentence is a palindrome.");
+            else
+                System.out.println("The input sentence is not a palindrome.");
+
+        }
+
     }
 }
+
+
+
+
